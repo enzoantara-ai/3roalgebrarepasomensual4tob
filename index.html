@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reto de Álgebra · Raíces, valor absoluto y logaritmos</title>
+<style>
+:root{
+  --paper:#f4f8fc; --grid:#d9e4f1; --card:#ffffff; --ink:#1c2b4a; --muted:#59688a;
+  --accent:#2457d6; --accent-ink:#ffffff; --pencil:#ffd84d; --line:#c9d6e8;
+  --ok:#1c8a55; --ok-bg:#dcf3e7; --bad:#c8372d; --bad-bg:#fbe4e1;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --paper:#101624; --grid:#1b2740; --card:#182136; --ink:#e8edf8; --muted:#9fb0cf;
+    --accent:#7ea6ff; --accent-ink:#0d1424; --pencil:#e6b800; --line:#2c3a58;
+    --ok:#4cd387; --ok-bg:#133425; --bad:#ff7b6b; --bad-bg:#3d1f1c;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  min-height:100vh; padding:16px; color:var(--ink); line-height:1.5;
+  font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;
+}
+.wrap{max-width:720px;margin:0 auto}
+.card{background:var(--card);border:2px solid var(--line);border-radius:10px;padding:22px}
+h1{font-size:1.6rem;line-height:1.2;margin:0 0 8px}
+h2{font-size:1.15rem;margin:18px 0 6px}
+p{margin:8px 0}
+.muted{color:var(--muted)}
+.hide{display:none!important}
+.btn{
+  font:inherit;font-weight:700;cursor:pointer;border:0;border-radius:8px;padding:12px 22px;
+  background:var(--accent);color:var(--accent-ink);
+}
+.btn:hover{filter:brightness(1.1)} .btn:active{transform:scale(.97)}
+.btn.ghost{background:transparent;color:var(--accent);border:2px solid var(--accent)}
+:focus-visible{outline:3px solid var(--pencil);outline-offset:2px}
+input[type=text]{
+  width:100%;font:inherit;font-size:1.05rem;padding:12px;margin:10px 0 14px;border-radius:8px;
+  border:2px solid var(--line);background:var(--paper);color:var(--ink);
+}
+details{border:2px solid var(--line);border-radius:8px;padding:10px 14px;margin:12px 0;background:var(--paper)}
+summary{cursor:pointer;font-weight:700}
+details ol,details ul{margin:8px 0 2px 18px;padding:0}
+details li{margin:6px 0}
+.hl{background:linear-gradient(transparent 55%,var(--pencil) 55%)}
+.top{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;margin-bottom:10px}
+.pill{border:2px solid var(--line);background:var(--paper);border-radius:99px;padding:3px 12px;font-size:.92rem}
+.bar{height:10px;border:2px solid var(--line);border-radius:99px;overflow:hidden;margin-bottom:16px;background:var(--paper)}
+.bar>div{height:100%;width:0;background:var(--accent);transition:width .3s}
+.meta{color:var(--muted);font-size:.92rem;margin-bottom:4px}
+.q{font-size:1.18rem;font-weight:700;margin:2px 0 10px}
+.expr{
+  font-family:"Cambria Math","STIX Two Math","Latin Modern Math","Times New Roman",serif;
+  font-size:1.5rem;text-align:center;padding:16px 8px;margin:6px 0 14px;overflow-x:auto;
+  background:var(--paper);border:2px dashed var(--line);border-radius:8px;
+}
+.opts{display:grid;gap:10px}
+.opt{
+  display:flex;gap:12px;align-items:center;text-align:left;cursor:pointer;color:var(--ink);
+  font-family:"Cambria Math","STIX Two Math","Latin Modern Math","Segoe UI",serif;font-size:1.1rem;
+  background:var(--card);border:2px solid var(--line);border-radius:8px;padding:11px 14px;
+}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt .l{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+  background:var(--paper);font:700 .9rem "Trebuchet MS",sans-serif}
+.opt:disabled{cursor:default}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.bad{border-color:var(--bad);background:var(--bad-bg)}
+.hint{margin-top:12px;padding:10px 14px;border-left:6px solid var(--pencil);background:var(--paper);border-radius:6px}
+.fb{margin-top:14px;padding:14px;border-radius:8px}
+.fb.ok{background:var(--ok-bg);border-left:6px solid var(--ok)}
+.fb.bad{background:var(--bad-bg);border-left:6px solid var(--bad)}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;align-items:center;margin-top:14px}
+.big{font-size:3rem;font-weight:800;text-align:center;margin:4px 0}
+.rev{border-top:2px solid var(--line);padding:14px 0}
+.rev .expr{font-size:1.2rem;padding:8px;margin:6px 0}
+.tick{font-weight:700}
+.tick.ok{color:var(--ok)} .tick.bad{color:var(--bad)}
+@media (max-width:480px){.card{padding:16px}.expr{font-size:1.25rem}}
+@media print{body{background:none}.btn,.noprint{display:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- INICIO -->
+<section id="s0" class="card">
+  <h1>🎮 Reto de Álgebra</h1>
+  <p>Raíces, valor absoluto y logaritmos: 10 ejercicios, del más fácil al más difícil. Puedes jugar todas las veces que quieras; las opciones cambian de lugar en cada partida.</p>
+  <label for="nm"><b>¿Cómo te llamas?</b></label>
+  <input type="text" id="nm" placeholder="Escribe tu nombre" maxlength="25" autocomplete="off">
+
+  <details open>
+    <summary>📖 ¿Cómo se juega? Lee esto primero</summary>
+    <ol>
+      <li><b>Ten a la mano lápiz y cuaderno.</b> Los ejercicios se resuelven en papel; el juego sirve para comprobar si tu resultado es correcto.</li>
+      <li><b>Lee el ejercicio</b> y resuélvelo con calma, paso a paso. No adivines.</li>
+      <li><b>Elige una opción</b> (A, B, C o D). Verás al instante si acertaste y por qué.</li>
+      <li>Si te atoras, pulsa <span class="hl">💡 Pista</span>. La pista es gratis y no resta puntos.</li>
+      <li><b>Puntos:</b> cada acierto suma 10 puntos (máximo 100). 🔥 La racha cuenta tus aciertos seguidos.</li>
+      <li><b>Al final</b> verás tu nota y el repaso de los 10 ejercicios con su respuesta y su solución explicada. Revisa los que fallaste y juega otra vez para llegar a 100.</li>
+    </ol>
+  </details>
+
+  <details>
+    <summary>🧠 Recuerda antes de empezar</summary>
+    <ul>
+      <li><b>Ecuación irracional:</b> 1) halla el CVA, 2) eleva para quitar la raíz, 3) resuelve, 4) <b>verifica</b> cada solución (puede haber impostoras).</li>
+      <li><b>Raíz de índice par</b> nunca es negativa. <b>Índice impar</b> existe para todo número real.</li>
+      <li><b>Valor absoluto:</b> |x| es la distancia al cero y nunca es negativa. Si |A| = B, entonces B ≥ 0 y A = B o A = −B.</li>
+      <li><b>Logaritmos:</b> log<sub>b</sub> b = 1 · log<sub>b</sub> 1 = 0 · la suma de logaritmos es el logaritmo del producto · la resta es el logaritmo del cociente.</li>
+    </ul>
+  </details>
+
+  <button class="btn" id="go">¡Empezar!</button>
+</section>
+
+<!-- JUEGO -->
+<section id="s1" class="card hide">
+  <div class="top">
+    <span class="pill" id="pn"></span>
+    <span class="pill">⭐ <span id="ps">0</span> pts</span>
+    <span class="pill">🔥 Racha: <span id="pr">0</span></span>
+  </div>
+  <div class="bar"><div id="bar"></div></div>
+  <div class="meta" id="meta"></div>
+  <div class="q" id="qt"></div>
+  <div class="expr" id="qe"></div>
+  <div class="opts" id="opts"></div>
+  <div class="row noprint">
+    <button class="btn ghost" id="hb">💡 Pista</button>
+    <button class="btn hide" id="nx">Siguiente →</button>
+  </div>
+  <div class="hint hide" id="hint"></div>
+  <div class="fb hide" id="fb"></div>
+</section>
+
+<!-- FINAL -->
+<section id="s2" class="card hide">
+  <h1 id="et" style="text-align:center"></h1>
+  <div class="big"><span id="es">0</span> / 100</div>
+  <p class="muted" style="text-align:center" id="em"></p>
+  <div class="row noprint" style="justify-content:center">
+    <button class="btn" id="again">🔁 Jugar otra vez</button>
+    <button class="btn ghost" onclick="window.print()">🖨️ Imprimir repaso</button>
+  </div>
+  <h2>Repaso: los 10 ejercicios con su respuesta</h2>
+  <div id="rv"></div>
+</section>
+
+<p class="muted" style="text-align:center;font-size:.85rem;margin-top:14px">Material de práctica · Álgebra 3.° de secundaria</p>
+</div>
+
+<script>
+/* La primera opción (o[0]) es la correcta; el juego mezcla el orden al jugar. */
+const Q = [
+ {s:"Ecuación e inecuación irracional", d:"Fácil", q:"Halla el conjunto de valores admisibles (CVA) de:", e:"F(x) = ∛(x − 5)",
+  o:["ℝ","[5 ; +∞⟩","ℝ − {5}","⟨5 ; +∞⟩"],
+  h:"Mira el índice de la raíz: ¿es par o impar?",
+  x:"La raíz tiene índice impar (3), así que existe para cualquier número real, incluso negativo. CVA = ℝ."},
+ {s:"Ecuación e inecuación irracional", d:"Fácil", q:"Resuelve la ecuación y halla su conjunto solución:", e:"√(x − 5) = −3",
+  o:["CS = ∅ (no hay solución)","CS = {14}","CS = {−14}","CS = ℝ"],
+  h:"¿Una raíz cuadrada puede dar un número negativo?",
+  x:"Una raíz de índice par nunca es negativa y −3 < 0, así que no hay solución. Ojo: si elevas al cuadrado sale x = 14, pero al verificar √9 = 3 ≠ −3. CS = ∅."},
+ {s:"Valor absoluto", d:"Fácil", q:"Resuelve la ecuación:", e:"|x − 3| = 5",
+  o:["CS = {−2 ; 8}","CS = {8}","CS = {2 ; −8}","CS = {−2}"],
+  h:"Separa en dos casos: x − 3 = 5 y x − 3 = −5.",
+  x:"x − 3 = 5 → x = 8, o x − 3 = −5 → x = −2. CS = {−2 ; 8}."},
+ {s:"Valor absoluto", d:"Fácil", q:"Resuelve la ecuación:", e:"|x| = −4",
+  o:["CS = ∅ (no hay solución)","CS = {4}","CS = {−4}","CS = {−4 ; 4}"],
+  h:"El valor absoluto es una distancia. ¿Una distancia puede ser negativa?",
+  x:"Una distancia nunca es negativa, así que |x| = −4 es imposible. CS = ∅."},
+ {s:"Logaritmos", d:"Fácil", q:"Calcula:", e:"log₅ 125",
+  o:["3","5","25","1/3"],
+  h:"¿5 elevado a qué número da 125?",
+  x:"log₅ 125 = x significa 5ˣ = 125. Como 5³ = 125, el resultado es 3."},
+ {s:"Logaritmos", d:"Fácil", q:"Calcula:", e:"log₇ 7 + log₅ 1",
+  o:["1","0","7","8"],
+  h:"Recuerda: log de la base = 1 y log de 1 = 0.",
+  x:"log₇ 7 = 1 y log₅ 1 = 0. Entonces 1 + 0 = 1."},
+ {s:"Logaritmos", d:"Fácil", q:"Reduce:", e:"T = log₃ 6 + log₃ 15 − log₃ 10",
+  o:["2","1","3","6"],
+  h:"Suma = producto; resta = cociente.",
+  x:"T = log₃(6 · 15 / 10) = log₃ 9 = 2, porque 3² = 9."},
+ {s:"Ecuación e inecuación irracional", d:"Intermedio", q:"Determina el conjunto solución:", e:"√(x + 10) = x + 4",
+  o:["CS = {−1}","CS = {−1 ; −6}","CS = {−6}","CS = ∅"],
+  h:"Eleva al cuadrado y luego verifica las dos soluciones.",
+  x:"Al cuadrado: x + 10 = x² + 8x + 16 → x² + 7x + 6 = 0 → x = −1 o x = −6. Verificamos: x = −1 → √9 = 3 ✔. x = −6 → √4 = 2 pero x + 4 = −2 ✘ (impostora). CS = {−1}."},
+ {s:"Valor absoluto", d:"Intermedio", q:"Resuelve la ecuación (¡verifica tus soluciones!):", e:"|x + 2| = 3x − 2",
+  o:["CS = {2}","CS = {0 ; 2}","CS = {0}","CS = {−1 ; 2}"],
+  h:"Primero exige que 3x − 2 ≥ 0, es decir x ≥ 2/3.",
+  x:"Condición: x ≥ 2/3. Caso 1: x + 2 = 3x − 2 → x = 2 ✔. Caso 2: x + 2 = −(3x − 2) → 4x = 0 → x = 0, que no cumple x ≥ 2/3 ✘. CS = {2}."},
+ {s:"Logaritmos", d:"Desafío final", q:"Si log₆ 2 = k, expresa en términos de k:", e:"log₆ 108",
+  o:["3 − k","3k","k − 3","2 − k"],
+  h:"Como 6 = 2 · 3, se cumple log₆ 2 + log₆ 3 = 1. Descompón 108 = 2² · 3³.",
+  x:"De log₆ 2 + log₆ 3 = 1 sale log₆ 3 = 1 − k. Como 108 = 2² · 3³: log₆ 108 = 2k + 3(1 − k) = 3 − k."}
+];
+
+const $ = id => document.getElementById(id);
+const LET = ["A","B","C","D"];
+let i, score, streak, done, res, name = "";
+
+const shuffle = a => { a = a.slice(); for (let k = a.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [a[k], a[j]] = [a[j], a[k]]; } return a; };
+const show = id => { ["s0","s1","s2"].forEach(s => $(s).classList.toggle("hide", s !== id)); window.scrollTo({top:0, behavior:"smooth"}); };
+
+function begin(){
+  const v = $("nm").value.trim(); if (v) name = v;
+  i = 0; score = 0; streak = 0; res = [];
+  show("s1"); render();
+}
+
+function render(){
+  const it = Q[i]; done = false;
+  $("pn").textContent = "Pregunta " + (i + 1) + " de " + Q.length;
+  $("ps").textContent = score; $("pr").textContent = streak;
+  $("bar").style.width = (i / Q.length * 100) + "%";
+  $("meta").textContent = it.s + " · " + it.d;
+  $("qt").textContent = it.q; $("qe").textContent = it.e;
+  $("hint").classList.add("hide"); $("fb").classList.add("hide");
+  $("nx").classList.add("hide"); $("hb").classList.remove("hide");
+  const opts = shuffle(it.o.map((t, k) => ({t, ok: k === 0})));
+  const box = $("opts"); box.innerHTML = "";
+  opts.forEach((op, k) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "opt";
+    const l = document.createElement("span"); l.className = "l"; l.textContent = LET[k];
+    const t = document.createElement("span"); t.textContent = op.t;
+    b.append(l, t);
+    b.onclick = () => choose(b, op, opts, it);
+    box.appendChild(b);
+  });
+}
+
+function choose(btn, op, opts, it){
+  if (done) return; done = true;
+  document.querySelectorAll(".opt").forEach((b, k) => { b.disabled = true; if (opts[k].ok) b.classList.add("ok"); });
+  const fb = $("fb"); fb.classList.remove("hide", "ok", "bad");
+  if (op.ok){ score += 10; streak++; fb.classList.add("ok"); }
+  else { btn.classList.add("bad"); streak = 0; fb.classList.add("bad"); }
+  fb.innerHTML = "";
+  const t = document.createElement("b");
+  t.textContent = op.ok ? "✅ ¡Correcto!" + (streak >= 3 ? " 🔥 Vas en racha" : "") : "❌ Casi. Mira cómo se resuelve:";
+  const s = document.createElement("div"); s.textContent = it.x;
+  fb.append(t, s);
+  res[i] = {ok: op.ok, ch: op.t};
+  $("ps").textContent = score; $("pr").textContent = streak;
+  $("bar").style.width = ((i + 1) / Q.length * 100) + "%";
+  $("hb").classList.add("hide"); $("hint").classList.add("hide");
+  $("nx").textContent = i === Q.length - 1 ? "Ver resultado 🏁" : "Siguiente →";
+  $("nx").classList.remove("hide"); $("nx").focus({preventScroll:true});
+}
+
+function finish(){
+  show("s2");
+  $("es").textContent = score;
+  let t, m;
+  if (score === 100){ t = "🏆 ¡Impecable"; m = "Ni una solución impostora se te escapó."; }
+  else if (score >= 70){ t = "🥇 ¡Muy buen trabajo"; m = "Dominas el tema. Revisa tus errores y juega otra vez para llegar a 100."; }
+  else if (score >= 40){ t = "🥈 ¡Vas por buen camino"; m = "Repasa los recuadros de «Recuerda» y las soluciones de abajo; luego vuelve a intentarlo."; }
+  else { t = "💪 ¡Sigue practicando"; m = "Lee con calma las soluciones de abajo y juega otra vez: cada intento mejora."; }
+  $("et").textContent = t + (name ? ", " + name : "") + "!";
+  $("em").textContent = m;
+  const rv = $("rv"); rv.innerHTML = "";
+  Q.forEach((it, k) => {
+    const r = res[k], d = document.createElement("div"); d.className = "rev";
+    const h = document.createElement("div"); h.className = "tick " + (r.ok ? "ok" : "bad");
+    h.textContent = (r.ok ? "✔ " : "✘ ") + "Ejercicio " + (k + 1) + " · " + it.s + " · " + it.d;
+    const q = document.createElement("div"); q.textContent = it.q;
+    const e = document.createElement("div"); e.className = "expr"; e.textContent = it.e;
+    d.append(h, q, e);
+    if (!r.ok){ const c = document.createElement("div"); c.className = "muted"; c.textContent = "Tu respuesta: " + r.ch; d.appendChild(c); }
+    const a = document.createElement("div"); a.innerHTML = "<b>Respuesta correcta:</b> "; a.append(it.o[0]);
+    const s = document.createElement("div"); s.className = "muted"; s.textContent = it.x;
+    d.append(a, s); rv.appendChild(d);
+  });
+}
+
+$("go").onclick = begin;
+$("again").onclick = () => { show("s0"); };
+$("nx").onclick = () => { i++; i >= Q.length ? finish() : render(); };
+$("hb").onclick = () => { const h = $("hint"); h.textContent = "💡 " + Q[i].h; h.classList.remove("hide"); };
+$("nm").addEventListener("keydown", e => { if (e.key === "Enter") begin(); });
+</script>
+</body>
+</html>
